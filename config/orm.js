@@ -7,9 +7,16 @@ var connection = require("./connection.js");
 // These help avoid SQL injection
 // https://en.wikipedia.org/wiki/SQL_injection
 var orm = {
-    selectAll: function() {
-        var queryString = "SELECT * FROM ?? WHERE ?? = ?";
-        connection.query(queryString, function(
+    selectAll: function(tableInput) {
+        var queryString = "SELECT * FROM = ??";
+        connection.query(queryString, [tableInput], function(err, result) {
+            if (err) throw err;
+            console.log(result);
+        });
+    },
+    insertOne: function(tableInput, valOfCol) {
+        var queryString = "INSERT INTO ?? VALUES ??";
+        connection.query(queryString, [tableInput, valOfCol], function(
             err,
             result
         ) {
@@ -17,17 +24,9 @@ var orm = {
             console.log(result);
         });
     },
-    insertOne: function() {
-        var queryString = "SELECT ?? FROM ?? ORDER BY ?? DESC";
-        connection.query(queryString, function(err, result) {
-            if (err) throw err;
-            console.log(result);
-        });
-    },
-    updateOne: function() {
-        var queryString = "SELECT ??, COUNT(??) AS count FROM ?? LEFT JOIN ?? ON ??.??= ??.id GROUP BY ?? ORDER BY count DESC LIMIT 1";
-
-        connection.query(queryString, function(err, result) {
+    updateOne: function(tableInput, colToSearch) {
+        var queryString = "UPDATE ?? SET ?? = VALUES";
+        connection.query(queryString, [tableInput, colToSearch], function(err, result) {
             if (err) throw err;
             console.log(result);
         });
