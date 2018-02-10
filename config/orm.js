@@ -1,4 +1,4 @@
-var connection = require("./connection.js");
+var connection = require("../config/connection.js");
 
 // Object Relational Mapper (ORM)
 
@@ -7,28 +7,28 @@ var connection = require("./connection.js");
 // These help avoid SQL injection
 // https://en.wikipedia.org/wiki/SQL_injection
 var orm = {
-    selectAll: function(tableInput) {
-        var queryString = "SELECT * FROM = ??";
-        connection.query(queryString, [tableInput], function(err, result) {
+    selectAll: function(tableName, callback) {
+        var queryString = "SELECT * FROM ??";
+        connection.query(queryString, [tableName], function(err, result) {
             if (err) throw err;
             console.log(result);
+            callback(result);
         });
     },
-    insertOne: function(tableInput, valOfCol) {
+    insertOne: function(tableName, valueOfColumns, callback) {
         var queryString = "INSERT INTO ?? VALUES ??";
-        connection.query(queryString, [tableInput, valOfCol], function(
-            err,
-            result
-        ) {
+        connection.query(queryString, [tableName, valueOfColumns], function(err, result) {
             if (err) throw err;
             console.log(result);
+            callback(result);
         });
     },
-    updateOne: function(tableInput, colToSearch) {
-        var queryString = "UPDATE ?? SET ?? = VALUES";
-        connection.query(queryString, [tableInput, colToSearch], function(err, result) {
+    updateOne: function(tableName, columnName, valueOfColumn, callback) {
+        var queryString = "UPDATE ?? SET ?? = ?";
+        connection.query(queryString, [tableName, columnName, valueOfColumn], function(err, result) {
             if (err) throw err;
             console.log(result);
+            callback(result);
         });
     }
 };
