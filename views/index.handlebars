@@ -5,11 +5,33 @@
     <li>
         <p>
         {{this.id}}.{{this.burger_name}}
-        <button data-burgerid="{{this.id}}" class="delburger">Delete</button>
+        <button data-burgerid="{{this.id}}" class="devourBurger">Devour</button>
         </p>
     </li>
     {{/each}}
 </ul>
 
+{{!-- Submit button and text area --}}
+<form action="/" class="create-form" method="POST" >
+    <textarea type="text" id="inputBurgerId" name="task"></textarea>
+    <button type="submit">Submit</button>
+    <p>Enter a burger  you want  to eat Click the "submit" button</p>
+</form>
 
+<script type="text/javascript">
+$(".create-form").on("submit", function(event) {
+    event.preventDefault();
 
+    var newBurgerName = {
+        burger_name: $("#inputBurgerId").val().trim()
+        }
+    $.ajax("/api/burgers", {
+        type: "POST",
+        data: newBurgerName
+    }).then(function(){
+        console.log("new burger");
+        location.reload();
+    });
+});
+
+</script>

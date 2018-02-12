@@ -6,30 +6,70 @@ var connection = require("../config/connection.js");
 // The ? signs are for swapping out other values
 // These help avoid SQL injection
 // https://en.wikipedia.org/wiki/SQL_injection
+
+// for generating mysql syntax
+function printQuestionMarks(num) {
+    var arr = [];
+
+    for (var i = 0; i < num; i++) {
+        arr.push("?");
+    }
+
+    return arr.toString();
+}
+
+function objToSql(ob) {
+    var arr = [];
+
+    for (var key in ob) {
+        arr.push(key + "=" + ob[key]);
+    }
+
+    return arr.toString();
+}
+
+
 var orm = {
     selectAll: function(tableName, callback) {
-        var queryString = "SELECT * FROM ??";
+        var queryString = "SELECT * FROM ?? ";
         connection.query(queryString, [tableName], function(err, result) {
             if (err) throw err;
-            console.log(result);
+            console.log("selectALL", result);
             callback(result);
         });
     },
-    insertOne: function(tableName, valueOfColumns, callback) {
-        var queryString = "INSERT INTO ?? VALUES ??";
-        connection.query(queryString, [tableName, valueOfColumns], function(err, result) {
+    insertOne: function(tableName, columns, valueOfColumns, callback) {
+        // var queryString = "INSERT INTO " + tableName + "VALUES ?? ";
+
+        var queryString = "INSERT INTO " + tableName;
+
+        queryString += " (";
+        queryString += columns.toString();
+        queryString += ") ";
+        queryString += "VALUES (";
+        queryString += printQuestionMarks(valueOfColumns.length);
+        queryString += ") ";
+
+        connection.query(queryString, valueOfColumns, function(err, result) {
             if (err) throw err;
-            console.log(result);
+            console.log("insertOne", result);
             callback(result);
         });
     },
-    updateOne: function(tableName, columnName, valueOfColumn, callback) {
-        var queryString = "UPDATE ?? SET ?? = ?";
-        connection.query(queryString, [tableName, columnName, valueOfColumn], function(err, result) {
+    updateOne: function(tableName, objColumnValue, condition, callback) {
+        var queryString = "UPDATE " + tableName;
+
+        queryString += " SET ";
+        queryString += objToSql(objColumnValue);
+        queryString += " WHERE ";
+        queryString += condition;
+
+        connection.query(queryString, function(err, result) {
             if (err) throw err;
             console.log(result);
             callback(result);
         });
     }
 };
+
 module.exports = orm;
