@@ -1,37 +1,74 @@
-<h1>Eat-da-Burger</h1>
+<div class="row">
 
-<ul>
-    {{#each burgers}}
-    <li>
-        <p>
-        {{this.id}}.{{this.burger_name}}
-        <button data-burgerid="{{this.id}}" class="devourBurger">Devour</button>
-        </p>
-    </li>
-    {{/each}}
-</ul>
+    <h1>Eat-da-Burger</h1>
 
-{{!-- Submit button and text area --}}
-<form action="/" class="create-form" method="POST" >
-    <textarea type="text" id="inputBurgerId" name="task"></textarea>
-    <button type="submit">Submit</button>
-    <p>Enter a burger  you want  to eat Click the "submit" button</p>
-</form>
+    <div class="col s6">
+        <ul>
+            {{#each burgers}}
+                {{#unless this.devoured}}
+                    <li>
+                        <p>
+                            {{this.id}}.{{this.burger_name}}
+                            <form action="burgers/{{this.id}}?_method=PUT" method="POST">
+                                <button data-burgerid="{{this.id}}" type="submit" class="devouredBurger">Devour</button>
+                            </form>
+                        </p>
+                    </li>
+                {{/unless}}
+            {{/each}}
+        </ul>
+    </div>
 
-<script type="text/javascript">
-$(".create-form").on("submit", function(event) {
-    event.preventDefault();
+    <div class="col s6">
+        {{#each burgers}}
+            {{#if this.devoured}}
+                <div class='burgerEaten'>
+                    <div>
+                        {{this.burger_name}}
+                    </div>
+                </div>
+            {{/if}}
+        {{/each}}
+    </div>
 
-    var newBurgerName = {
-        burger_name: $("#inputBurgerId").val().trim()
+    {{!-- Submit button and text area --}}
+    <form action="/" class="create-form" method="POST" >
+        <textarea type="text" id="inputBurgerId" name="task"></textarea>
+        <button type="submit">Submit</button>
+        <p>Enter a burger  you want  to eat Click the "submit" button</p>
+    </form>
+
+
+    <script type="text/javascript">
+    $(".create-form").on("submit", function(event) {
+        event.preventDefault();
+
+        var newBurgerName = {
+            burger_name: $("#inputBurgerId").val().trim()
         }
-    $.ajax("/api/burgers", {
-        type: "POST",
-        data: newBurgerName
-    }).then(function(){
-        console.log("new burger");
-        location.reload();
+        $.ajax("/api/burgers/", {
+            type: "POST",
+            data: newBurgerName
+        }).then(function(){
+            console.log("new burger");
+            location.reload();
+        });
     });
-});
 
-</script>
+
+    $(".devouredBurger").on("click", function(event){  
+        var id = $(this).attr("data-burgerid")
+        console.log($(this).attr("data-burgerid"));
+
+        var newId = { id: id }
+
+        $.ajax("/api/burgers/" + id, {
+            type: "PUT",
+            data: newId
+        }).then(function () {
+            console.log("new burger");
+            location.reload();
+        });
+    })
+    </script>
+</div>

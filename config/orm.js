@@ -38,9 +38,8 @@ var orm = {
             callback(result);
         });
     },
-    insertOne: function(tableName, columns, valueOfColumns, callback) {
-        // var queryString = "INSERT INTO " + tableName + "VALUES ?? ";
 
+    insertOne: function(tableName, columns, valueOfColumns, callback) {
         var queryString = "INSERT INTO " + tableName;
 
         queryString += " (";
@@ -56,17 +55,18 @@ var orm = {
             callback(result);
         });
     },
-    updateOne: function(tableName, objColumnValue, condition, callback) {
+
+    updateOne: function(tableName, objColumnValues, condition, callback) {
         var queryString = "UPDATE " + tableName;
 
         queryString += " SET ";
-        queryString += objToSql(objColumnValue);
+        queryString += objToSql(objColumnValues);
         queryString += " WHERE ";
         queryString += condition;
 
         connection.query(queryString, function(err, result) {
             if (err) throw err;
-            console.log(result);
+            console.log("updateOne", result);
             callback(result);
         });
     }
