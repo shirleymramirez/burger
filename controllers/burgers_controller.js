@@ -5,7 +5,11 @@ var burger = require("../models/burger.js");
 // Routes
 router.get("/", function(req, res) {
     burger.selectAll(function(result) {
-        res.render("index", { burgers: result });
+        res.render("index", {
+            burgers: result,
+            // if one of the item is true, used devoured
+            hasDevoured: result.some(item => item.devoured)
+        });
     });
 
     router.post('/api/burgers', function(req, res) {
@@ -16,7 +20,6 @@ router.get("/", function(req, res) {
 
     router.put('/api/burgers/:id', function(req, res) {
         var condition = 'id = ' + req.params.id;
-
         burger.updateOne({ devoured: true }, condition, function(result) {
             if (result.changedRows === 0) {
                 // If no rows were changed, then the ID must not exist, so 404
