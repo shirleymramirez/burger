@@ -45,6 +45,7 @@ li {
     background-color: beige;
     margin: 10px;
     overflow-wrap: break-word;
+    color: lightgrey;
 }
 
 .create-form {
