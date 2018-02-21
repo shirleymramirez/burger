@@ -23,6 +23,9 @@ A burger logger with MySQL, Node, Express, Handlebars and a homemade ORM
 - used Node and Mysql to query and route data in the app
 - used Handlebars to generate HTML.
 
+Link to heroku:
+https://secure-cove-61385.herokuapp.com/
+
 ## Sample working app screen
 
 ![screen shot 2018-02-14 at 12 31 03 pm](https://user-images.githubusercontent.com/31137669/36274657-ae9e6f02-1245-11e8-9712-0a7860174d66.png)
