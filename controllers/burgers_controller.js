@@ -14,7 +14,7 @@ router.get("/", function(req, res) {
 
     router.post('/api/burgers', function(req, res) {
         burger.insertOne("burger_name", [req.body.burger_name], function(result) {
-            res.json({ id: result.insertId });
+            res.redirect("/");
         });
     });
 
@@ -25,6 +25,7 @@ router.get("/", function(req, res) {
                 // If no rows were changed, then the ID must not exist, so 404
                 return res.status(404).end();
             }
+            res.redirect("/");
             res.status(200).end();
 
         });
